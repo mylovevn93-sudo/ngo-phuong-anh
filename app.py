@@ -10,7 +10,7 @@ import os
 
 # Cấu hình trang Streamlit với giao diện rộng rãi và tiêu đề chuyên nghiệp
 st.set_page_config(
-    page_title="Phát hiện Giao dịch bất thường",
+    page_title="Hệ thống Phát hiện Giao dịch Bất thường - Bank Anomaly Detection",
     page_icon="🛡️",
     layout="wide",
     initial_sidebar_state="expanded"
@@ -131,7 +131,7 @@ if df is not None:
     df['co_nhan_vien'] = df['is_employee'].astype(int)
 
     # Layout Dashboard với 3 Tabs
-    tab_eda, tab_model, tab_inspect = st.tabs(["📊 Phân Tích Tổng Quan (EDA)", "🔍 Mô Hình & Kết Quả Bất Thường", "🔬 Tra Cứu Giao Dịch"])
+    tab_eda, tab_model, tab_inspect = st.tabs(["📊 Phân Tích Tổng Overview (EDA)", "🔍 Mô Hình & Kết Quả Bất Thường", "🔬 Tra Cứu Giao Dịch"])
 
     # ---------------- TAB 1: EDA ----------------
     with tab_eda:
@@ -162,13 +162,14 @@ if df is not None:
             txn_hours = df['gio_giao_dich'].value_counts().sort_index().reset_index()
             txn_hours.columns = ['Giờ', 'Số lượng giao dịch']
             
+            # Đổi sang bảng màu Sunset (vàng - cam - hồng)
             fig_hour = px.bar(
                 txn_hours, 
                 x='Giờ', 
                 y='Số lượng giao dịch',
                 labels={'Giờ': 'Giờ trong ngày', 'Số lượng giao dịch': 'Số lượng giao dịch'},
                 color='Số lượng giao dịch',
-                color_continuous_scale='dense',
+                color_continuous_scale='Sunset',
                 template='plotly_dark'
             )
             fig_hour.update_layout(height=400)
@@ -178,7 +179,7 @@ if df is not None:
             st.markdown("#### Thống kê mô tả số tiền giao dịch")
             st.dataframe(df['amount'].describe().reset_index().rename(columns={'index': 'Chỉ số mô tả', 'amount': 'Giá trị (VND)'}), use_container_width=True)
             
-            # Biểu đồ boxplot số tiền giao dịch để xem ngoại lai sơ bộ
+            # Biểu đồ boxplot số tiền giao dịch - Đổi sang màu hồng vàng (Rose Gold)
             fig_box = px.box(
                 df, 
                 y='amount', 
@@ -186,7 +187,7 @@ if df is not None:
                 title="Biểu đồ Boxplot Phân Phối Số Tiền (Thang logarit)",
                 log_y=True,
                 template='plotly_dark',
-                color_discrete_sequence=['#6a11cb']
+                color_discrete_sequence=['#ffb7b2']
             )
             fig_box.update_layout(height=280)
             st.plotly_chart(fig_box, use_container_width=True)
@@ -246,17 +247,17 @@ if df is not None:
         st.markdown("#### Trực quan hóa ranh giới phát hiện bất thường")
         st.write("Biểu đồ thể hiện mối quan hệ giữa **Giờ giao dịch** và **Số tiền**, được tô màu theo trạng thái phân loại bất thường.")
         
-        # Vẽ biểu đồ Plotly Scatter
+        # Vẽ biểu đồ Plotly Scatter - Đổi màu: Bình thường là Vàng nhạt (#ffd166), Bất thường là Hồng đậm (#ff007f)
         fig_scatter = px.scatter(
             df.sample(n=min(10000, len(df)), random_state=42), # Sample để biểu đồ mượt mà nếu dữ liệu quá lớn
             x="gio_giao_dich",
             y="amount",
             color="is_anomaly",
-            color_discrete_map={False: "#4361ee", True: "#ff0054"},
+            color_discrete_map={False: "#ffd166", True: "#ff007f"},
             labels={"gio_giao_dich": "Giờ Giao Dịch", "amount": "Số Tiền Giao Dịch (VND)", "is_anomaly": "Bất Thường?"},
             hover_data=["transaction_id", "location", "is_employee", "anomaly_score"],
             log_y=True,
-            title="Biểu đồ phân tách giao dịch (Màu Hồng Đỏ là Bất thường)",
+            title="Biểu đồ phân tách giao dịch (Màu Hồng Đậm là Bất thường, Màu Vàng là Bình thường)",
             template="plotly_dark"
         )
         st.plotly_chart(fig_scatter, use_container_width=True)
