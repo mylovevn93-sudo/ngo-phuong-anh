@@ -10,7 +10,7 @@ import os
 
 # Cấu hình trang Streamlit với giao diện rộng rãi và tiêu đề chuyên nghiệp
 st.set_page_config(
-    page_title="Hệ thống Phát hiện Giao dịch Bất thường - Bank Anomaly Detection",
+    page_title="Hệ thống Phát hiện Giao dịch Bất thường trong Kiểm toán nội bộ",
     page_icon="🛡️",
     layout="wide",
     initial_sidebar_state="expanded"
