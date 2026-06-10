@@ -168,7 +168,7 @@ if df is not None:
                 y='Số lượng giao dịch',
                 labels={'Giờ': 'Giờ trong ngày', 'Số lượng giao dịch': 'Số lượng giao dịch'},
                 color='Số lượng giao dịch',
-                color_continuous_scale='Viridis',
+                color_continuous_scale='dense',
                 template='plotly_dark'
             )
             fig_hour.update_layout(height=400)
@@ -186,7 +186,7 @@ if df is not None:
                 title="Biểu đồ Boxplot Phân Phối Số Tiền (Thang logarit)",
                 log_y=True,
                 template='plotly_dark',
-                color_discrete_sequence=['#2575fc']
+                color_discrete_sequence=['#6a11cb']
             )
             fig_box.update_layout(height=280)
             st.plotly_chart(fig_box, use_container_width=True)
@@ -252,11 +252,11 @@ if df is not None:
             x="gio_giao_dich",
             y="amount",
             color="is_anomaly",
-            color_discrete_map={False: "#2575fc", True: "#e63946"},
+            color_discrete_map={False: "#4361ee", True: "#ff0054"},
             labels={"gio_giao_dich": "Giờ Giao Dịch", "amount": "Số Tiền Giao Dịch (VND)", "is_anomaly": "Bất Thường?"},
             hover_data=["transaction_id", "location", "is_employee", "anomaly_score"],
             log_y=True,
-            title="Biểu đồ phân tách giao dịch (Màu Đỏ là Bất thường)",
+            title="Biểu đồ phân tách giao dịch (Màu Hồng Đỏ là Bất thường)",
             template="plotly_dark"
         )
         st.plotly_chart(fig_scatter, use_container_width=True)
